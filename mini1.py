@@ -61,27 +61,29 @@ def display(images):
         with cols[i]:
                 st.image(getFileName(images[i]), use_column_width=True, caption=images[i])
 
+def processRequest(image):
+  caption = caption_creator.get_caption(image)
+  specie = SpecieFinder(flower_names).get_closest_species(caption,1)[0]
+  cols = st.columns(3)
+  with cols[0]:
+    st.image(image, caption=specie, use_column_width=True)
+  neighbors = SpecieFinder(flower_names).get_closest_species(specie, 3)
+  display(neighbors)
+
 def main():
   st.title("Flower Identifier App")
   uploaded_file = st.file_uploader("Choose an image...", type="jpg")
-  user_input = st.text_input("Provide an image link: ")
+  user_input = st.text_input("Provide an image link: ",value="https://assets.americanmeadows.com/media/catalog/product/i/r/iris-siberica-caesars-brother-credit-walters-gardens_1.jpg")
   submit_button = st.button("Submit")
-  image = getImage("https://assets.americanmeadows.com/media/catalog/product/i/r/iris-siberica-caesars-brother-credit-walters-gardens_1.jpg")
   if submit_button:
     if user_input:
       image = getImage(user_input)
+      processRequest(image)
     
     elif uploaded_file is not None:
         # Display the uploaded image
         image = Image.open(uploaded_file)
-    caption = caption_creator.get_caption(image)
-    specie = SpecieFinder(flower_names).get_closest_species(caption,1)[0]
-    cols = st.columns(3)
-    with cols[0]:
-      st.image(image, caption=specie, use_column_width=True)
-    # print (specie)
-    neighbors = SpecieFinder(flower_names).get_closest_species(specie, 3)
-    # print(neighbors)
-    display(neighbors)
+        processRequest(image)
+    
 
 main()
