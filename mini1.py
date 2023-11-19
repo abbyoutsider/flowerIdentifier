@@ -79,9 +79,9 @@ def main():
     cols = st.columns(3)
     with cols[0]:
       st.image(image, caption=specie, use_column_width=True)
-    print (specie)
+    # print (specie)
     neighbors = SpecieFinder(flower_names).get_closest_species(specie, 3)
-    print(neighbors)
+    # print(neighbors)
     display(neighbors)
 
 main()
